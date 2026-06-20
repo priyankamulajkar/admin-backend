@@ -2,7 +2,7 @@ import express from 'express';
 import MenuCategoryController  from '../controllers/MenuCategoryController';
 import validateMiddleware from '../middleware/validateMiddleware';
 import menuCategoryValidatorSchema from '../validators/menuCategoryValidators';
-import authMiddleware from '../middleware/authMiddleware'
+import authMiddleware from '../middleware/authMiddleware';
 import roleMiddleware from '../middleware/roleMiddleware';
 
 const router = express.Router();
