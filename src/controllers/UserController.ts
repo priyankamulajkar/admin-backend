@@ -87,6 +87,20 @@ class UserController {
       );
   });
 
+  updateUserStatus = AsyncHandler(async (req: Request, res: Response) => {
+  const id: string = req.params.id as string;
+  const { status } = req.body;
+
+  const user = await this.userService.updateUser(id, { status });
+  
+  return ApiResponse.success(
+    res,
+    HTTP_STATUS.OK,
+    MESSAGES.UPDATED,
+    user
+  );
+});
+
   deleteUser = AsyncHandler( async (req: Request, res: Response) => {
       const id: string = req.params.id as string;
       const user = await this.userService.deleteUser(id);
@@ -104,13 +118,20 @@ class UserController {
 
     const user =  await this.userService.getUserByEmail(email);
 
+    if(user.status !== 'ACTIVE'){
+    return ApiResponse.error(
+        res,
+        HTTP_STATUS.FORBIDDEN,
+        'User is not active'
+    );
+}
     const isMatch = await bcrypt.compare(password, user.password);
 
     if(isMatch){
       const token = jwt.sign(
           {
             userId: user._id,
-             role: user.role
+             role: user.role,
           },
           JWT_SECRET,
           {
